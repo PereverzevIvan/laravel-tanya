@@ -17,8 +17,14 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', [MainController::class, 'show_all_articles']);
 Route::get('/one_article', [MainController::class, 'show_one_article']);
+
 Route::get('/about_us', [MainController::class, 'show_about_us']);
 Route::get('/contacts', [MainController::class, 'show_contacts']);
 
 Route::get('/create_user', [AuthController::class, 'create']);
 Route::post('/register', [AuthController::class, 'register']);
+
+use App\Http\Controllers\ArticleController;
+
+// Руты для работы со статьями
+Route::resource('/article', ArticleController::class);

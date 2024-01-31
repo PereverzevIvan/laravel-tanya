@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
-{
+{   
 	// Отображение всех статей
     public function show_all_articles() {
         $articles = json_decode(file_get_contents(public_path().'/articles.json'));
-        return view('main.all_articles', ['articles' => $articles]);
+        return view('article.all_articles', ['articles' => $articles]);
     }
 
 	// Отображение одной статьи
@@ -22,7 +22,7 @@ class MainController extends Controller
                 break;
             } 
         }
-        return view('main.article', ['article' => $data]);
+        return view('article.one_article', ['article' => $data]);
     }
 
 	// Отображение страницы "О нас"
