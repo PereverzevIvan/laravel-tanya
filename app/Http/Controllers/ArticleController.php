@@ -13,23 +13,38 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::all();
+        $articles = Article::latest()->paginate(6);
         return view('article.all_articles', ['articles' => $articles]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+	public function create()
+	{
+		return view('article.create_article');
+	}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>'required',
+            'short_desc'=>'required|min:6',
+            'desc'=>'required|min:6',
+            'date'=>'required',
+        ]);
+
+        $article = new Article;
+        $article->name = $request->name;
+        $article->short_desc = $request->short_desc;
+        $article->desc = $request->desc;
+        $article->date = $request->date;
+        $article->author_id = 1;
+        $article->save();
+        return redirect('/article');
     }
 
     /**
@@ -37,7 +52,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        //
+        return view('article.one_article', ['article' => $article]);
     }
 
     /**
@@ -45,7 +60,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        return view('article.edit_article', ['article' => $article]);
     }
 
     /**
@@ -53,7 +68,19 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        //
+        $request->validate([
+            'name'=>'required',
+            'short_desc'=>'required|min:6',
+            'desc'=>'required|min:6',
+            'date'=>'required',
+        ]);
+
+        $article->name = $request->name;
+        $article->short_desc = $request->short_desc;
+        $article->desc = $request->desc;
+        $article->date = $request->date;
+        $article->save();
+        return redirect()->route('article.show', ['article' => $article]);
     }
 
     /**
@@ -61,6 +88,7 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        $article->delete();
+        return redirect('/article');
     }
 }

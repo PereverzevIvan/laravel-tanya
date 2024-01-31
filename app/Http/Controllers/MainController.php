@@ -8,7 +8,7 @@ class MainController extends Controller
 	// Отображение всех статей
     public function show_all_articles() {
         $articles = json_decode(file_get_contents(public_path().'/articles.json'));
-        return view('article.all_articles', ['articles' => $articles]);
+        return view('article.all_articles_json', ['articles' => $articles]);
     }
 
 	// Отображение одной статьи
