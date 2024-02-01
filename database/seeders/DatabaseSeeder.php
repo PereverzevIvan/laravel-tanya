@@ -23,12 +23,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         
-        // Создание статей с рандомными значениями с помощью фабрики
-        Article::factory(10)->create();
+        // Создание статей с рандомными значениями и рандомными комментариями
+        Article::factory(10)->has(Comment::factory(3))->create();
         
         // Использование сидеров
-		$this->call([
-			ArticleSeeder::class, // Создание статей из json файла
-		]);
+		//$this->call([
+		//	ArticleSeeder::class, // Создание статей из json файл
+		//]);
     }
 }

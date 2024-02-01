@@ -16,4 +16,9 @@ class Article extends Model
         'desc',
         'author_id'
     ];
+
+    public function comment () {
+        // hasMany означает связь "один ко многим"
+        return $this->hasMany(Comment::class);
+    }
 }
