@@ -28,6 +28,7 @@
 </section>
 <section class="comment-section">
     <h2>Комментарии к статье</h2>
+    @if (Auth::check())
     <form class="form" action="/comment/store" method="POST">
         @csrf
         <fieldset>
@@ -43,6 +44,7 @@
             <button class="button button_blue" type="submit">Отправить</button>
         </fieldset>
     </form>
+    @endif
     <div class="comments-container">
         @foreach ($comments as $comment)
             <div class="comment">
