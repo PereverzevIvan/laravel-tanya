@@ -13,6 +13,7 @@ class AuthController extends Controller
     public function registration() {
         return view('auth.register');
     }
+    
     // Метод для создания нового пользователя в БД
     public function create_user(Request $request) {
         $request->validate([
@@ -26,12 +27,13 @@ class AuthController extends Controller
             'name'      =>  $request->name,
             'email'     =>  $request->email,
             'password'  =>  Hash::make($request->password),
+            'role'      =>  'reader', 
         ]);
 
-		// Создание нового токена
+        // Создание нового токена
         $user->createToken('myAppToken')->plainTextToken;
-		
-		// Автоматический переход по адресу
+        
+        // Автоматический переход по адресу
         return redirect()->route('login');
     }
 

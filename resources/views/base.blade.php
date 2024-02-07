@@ -13,7 +13,9 @@
         <nav class="header__nav">
             <a href="/" class="header__link">Главная</a>
             <a href="/article" class="header__link">Статьи</a>
-            <a href="/article/create" class="header__link">Создание статьи</a>
+            @can('create')
+                <a href="/article/create" class="header__link">Создание статьи</a>
+            @endcan
             <a href="/contacts" class="header__link">Контакты</a>
             <a href="/about_us" class="header__link">О нас</a>
         </nav>

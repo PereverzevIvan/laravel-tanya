@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class CommentController extends Controller
         $comment = new Comment;
         $comment->title = $request->title;
         $comment->text = $request->text;
-        $comment->author_id = 1;
+        $comment->author_id = Auth::id(); // Назначение автора
         $comment->article_id = $request->article_id;
         $comment->save();
     
@@ -26,6 +27,8 @@ class CommentController extends Controller
 
     public function delete($comment_id) {
         $comment = Comment::findOrFail($comment_id);
+        Gate::authorize('comment', $comment); // Проверка на право доступа
+
         $article_id = $comment->article_id;
         $comment->delete();
         return redirect()->route('article.show', ['article' => $article_id]);
@@ -38,6 +41,8 @@ class CommentController extends Controller
         ]);
     
         $comment = Comment::findOrFail($comment_id);
+        Gate::authorize('comment', $comment); // Проверка на право доступа
+
         $comment->title = $request->title;
         $comment->text = $request->text;
         $comment->save();
@@ -47,6 +52,8 @@ class CommentController extends Controller
 
     public function edit($comment_id) {
         $comment = Comment::findOrFail($comment_id);
+        Gate::authorize('comment', $comment); // Проверка на право доступа
+
         return view('comment.edit_comment', ['comment' => $comment]);
     }
 
