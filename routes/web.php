@@ -25,9 +25,9 @@ Route::get('/contacts', [MainController::class, 'show_contacts']);
 
 // Руты для работы с пользователями
 Route::get('/register', [AuthController::class, 'registration']);
-Route::post('/create_user', [AuthController::class, 'create_user'])->middleware('auth:sanctum');
+Route::post('/create_user', [AuthController::class, 'create_user']);
 Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/authenticate', [AuthController::class, 'authenticate'])->middleware('auth:sanctum');
+Route::post('/authenticate', [AuthController::class, 'authenticate']);
 Route::get('/logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
 
 // Руты для работы со статьями
