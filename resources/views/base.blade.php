@@ -17,7 +17,12 @@
             <a href="/contacts" class="header__link">Контакты</a>
             <a href="/about_us" class="header__link">О нас</a>
         </nav>
-        <a href="/create_user" class="header__sign-in">Sign In</a>
+        @if (Auth::user() != null)
+        <a href="/logout" class="header__link">{{ Auth::user()->name }}</a>
+        @else
+            <a href="/register" class="header__link">Регистрация</a>
+            <a href="/login" class="header__link">Вход</a>
+        @endif
     </header>
     <main class="main">
         @yield('content')

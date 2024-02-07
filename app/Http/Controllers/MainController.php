@@ -22,7 +22,7 @@ class MainController extends Controller
                 break;
             } 
         }
-        return view('article.one_article', ['article' => $data]);
+        return view('article.one_article_json', ['article' => $data]);
     }
 
 	// Отображение страницы "О нас"

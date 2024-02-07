@@ -27,8 +27,9 @@ class DatabaseSeeder extends Seeder
         Article::factory(10)->has(Comment::factory(3))->create();
         
         // Использование сидеров
-		//$this->call([
-		//	ArticleSeeder::class, // Создание статей из json файл
-		//]);
+		$this->call([
+			// ArticleSeeder::class, // Создание статей из json файл
+            RoleSeeder::class, // Создание двух пользователей с разными ролями
+		]);
     }
 }

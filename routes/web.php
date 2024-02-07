@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,16 +17,18 @@ use App\Http\Controllers\CommentController;
 |
 */
 
+// Общие руты для MainController
 Route::get('/', [MainController::class, 'show_all_articles']);
 Route::get('/one_article', [MainController::class, 'show_one_article']);
-
 Route::get('/about_us', [MainController::class, 'show_about_us']);
 Route::get('/contacts', [MainController::class, 'show_contacts']);
 
-Route::get('/create_user', [AuthController::class, 'create']);
-Route::post('/register', [AuthController::class, 'register']);
-
-use App\Http\Controllers\ArticleController;
+// Руты для работы с пользователями
+Route::get('/register', [AuthController::class, 'registration']);
+Route::post('/create_user', [AuthController::class, 'create_user'])->middleware('auth:sanctum');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/authenticate', [AuthController::class, 'authenticate'])->middleware('auth:sanctum');
+Route::get('/logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
 
 // Руты для работы со статьями
 Route::resource('/article', ArticleController::class);
