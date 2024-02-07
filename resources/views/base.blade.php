@@ -16,6 +16,9 @@
             @can('create')
                 <a href="/article/create" class="header__link">Создание статьи</a>
             @endcan
+            @can('comment-admin')
+                <a href="/comment/" class="header__link">Все комментарии</a>
+            @endcan
             <a href="/contacts" class="header__link">Контакты</a>
             <a href="/about_us" class="header__link">О нас</a>
         </nav>
