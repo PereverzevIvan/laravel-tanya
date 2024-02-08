@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\AdminCommentMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Article;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewCommentNotify;
 
 use Illuminate\Http\Request;
 
@@ -75,6 +79,12 @@ class CommentController extends Controller
         $comment = Comment::findOrFail($comment_id);
         $comment->status = true;
         $comment->save();
+
+        $article = Article::findOrFail($comment->article_id);
+        // Получаем всех пользователей кроме того, кто оставил комментарий
+	    $users = User::where('id', '!=', $comment->author_id)->get();
+
+        Notification::send($users, new NewCommentNotify($article));
 
         return redirect()->route('comments');
     }
