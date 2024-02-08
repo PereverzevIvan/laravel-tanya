@@ -29,11 +29,11 @@ class CommentController extends Controller
         $comment->text = $request->text;
         $comment->author_id = Auth::id();
         $comment->article_id = $request->article_id;
-        $comment->save();
+        $res = $comment->save();
 
         Mail::to('i.d.pereverzev@mail.ru')->send(new AdminCommentMail($comment));
     
-        return redirect()->route('article.show', ['article' => $request->article_id]);
+        return redirect()->route('article.show', ['article' => $request->article_id, 'res'=>$res]);
     }
 
     public function delete($comment_id) {

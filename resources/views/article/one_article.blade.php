@@ -28,6 +28,15 @@
 </section>
 <section class="comment-section">
     <h2>Комментарии к статье</h2>
+    @if (Auth::check() & isset($_GET['res']))
+        @if ($_GET['res'] == 1)
+            <div class="alert alert_success">
+                <p class="alert__text">
+                    Ваш комментарий успешно сохранен и отправлен на модерацию.
+                </p>
+            </div>
+        @endif
+    @endif
     @if (Auth::check())
     <form class="form" action="/comment/store" method="POST">
         @csrf
