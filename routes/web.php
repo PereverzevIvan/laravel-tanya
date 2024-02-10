@@ -32,9 +32,10 @@ Route::get('/logout', [AuthController::class, 'logOut']);
 
 // Руты для работы со статьями
 Route::resource('/article', ArticleController::class);
+Route::get('article/{article}', [ArticleController::class, 'show'])->name('article.show')->middleware('path-counter');
 
 // Руты для работы с комментариями к статьям
-Route::group(['prefix' => '/comment'], function() {
+Route::group(['prefix' => '/comment', 'middleware' => 'auth:sanctum'], function() {
 	Route::get('/', [CommentController::class, 'index'])->name('comments');
 	Route::post('/store', [CommentController::class, 'store']);
 	Route::get('/edit/{id}', [CommentController::class, 'edit']);
