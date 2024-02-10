@@ -11,6 +11,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewCommentNotify;
 use App\Events\NewCommentEvent;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -18,8 +20,13 @@ class CommentController extends Controller
 {
     // Метод отображения всех комментариев
     public function index() {
-        Gate::authorize('comment-admin');
-        $comments = Comment::latest()->paginate(10);
+        $page = '0';
+        if (isset($_GET['page'])) $page = $_GET['page'];
+
+        $comments = Cache::remember('index_comments/'.$page, 3000, function () {
+            return Comment::latest()->paginate(10);
+        });
+
         return view('comment.index', ['comments' => $comments]);
     }
 
@@ -36,17 +43,25 @@ class CommentController extends Controller
         $comment->article_id = $request->article_id;
         $res = $comment->save();
 
-        Mail::to('i.d.pereverzev@mail.ru')->send(new AdminCommentMail($comment));
+        if ($res) {
+            $this->clearCacheForComments();
+            Mail::to('i.d.pereverzev@mail.ru')->send(new AdminCommentMail($comment));
+        }
     
         return redirect()->route('article.show', ['article' => $request->article_id, 'res'=>$res]);
     }
 
     public function delete($comment_id) {
         $comment = Comment::findOrFail($comment_id);
-        Gate::authorize('comment', $comment); // Проверка на право доступа
-
+        Gate::authorize('comment', $comment);
         $article_id = $comment->article_id;
-        $comment->delete();
+        $res = $comment->delete();
+        
+        if ($res) {
+            $this->clearCacheForComments();
+            $this->clearCacheForArticle($comment->article_id);
+        }
+
         return redirect()->route('article.show', ['article' => $article_id]);
     }
 
@@ -61,7 +76,12 @@ class CommentController extends Controller
 
         $comment->title = $request->title;
         $comment->text = $request->text;
-        $comment->save();
+        $res = $comment->save();
+
+        if ($res) {
+            $this->clearCacheForComments();
+            $this->clearCacheForArticle($comment->article_id);
+        }
     
         return redirect()->route('article.show', ['article' => $comment->article_id]);
     }
@@ -79,14 +99,20 @@ class CommentController extends Controller
 
         $comment = Comment::findOrFail($comment_id);
         $comment->status = true;
-        $comment->save();
+        $res = $comment->save();
 
-        $article = Article::findOrFail($comment->article_id);
-        // Получаем всех пользователей кроме того, кто оставил комментарий
-	    $users = User::where('id', '!=', $comment->author_id)->get();
+        if ($res) {
+            $this->clearCacheForComments();
+            $this->clearCacheForArticle($comment->article_id);
 
-        Notification::send($users, new NewCommentNotify($article));
-        NewCommentEvent::dispatch($article);
+            $article = Article::findOrFail($comment->article_id);
+            
+            // Получаем всех пользователей кроме того, кто оставил комментарий
+            $users = User::where('id', '!=', $comment->author_id)->get();
+    
+            Notification::send($users, new NewCommentNotify($article));
+            NewCommentEvent::dispatch($article);
+        }
 
         return redirect()->route('comments');
     }
@@ -97,8 +123,29 @@ class CommentController extends Controller
 
         $comment = Comment::findOrFail($comment_id);
         $comment->status = false;
-        $comment->save();
+        $res = $comment->save();
+
+        if ($res) {
+            $this->clearCacheForComments();
+            $this->clearCacheForArticle($comment->article_id);
+        }
 
         return redirect()->route('comments');
-    }    
+    }
+    
+    public function clearCacheForArticle($article_id=null) {
+        if (isset($article_id)) {
+            $keys = DB::table('cache')->whereRaw('`key` GLOB :key', [':key' => 'comments/'.$article_id.'/*[0-9]'])->get();
+            foreach($keys as $key) {
+                Cache::forget($key->key);
+            }    
+        }
+    }
+
+    public function clearCacheForComments() {
+        $keys = DB::table('cache')->whereRaw('`key` GLOB :key', [':key' => 'index_comments/*[0-9]'])->get();
+        foreach($keys as $key) {
+            Cache::forget($key->key);
+        }
+    }
 }

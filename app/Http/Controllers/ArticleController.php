@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Gate;
 use App\Jobs\ArticleMailJob;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -15,8 +17,13 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
         $articles = Article::latest()->paginate(6);
+        $page = '0';
+        if (isset($_GET['page'])) $page = $_GET['page'];
+
+        $articles = Cache::remember('articles'.$page, 3000, function () {
+            return Article::latest()->paginate(6);
+        });
         return view('article.all_articles', ['articles' => $articles]);
     }
 
@@ -48,9 +55,12 @@ class ArticleController extends Controller
         $article->desc = $request->desc;
         $article->date = $request->date;
         $article->author_id = 1;
-        $article->save();
+        $res = $article->save();
 
-        ArticleMailJob::dispatch($article);
+        if ($res) {
+            $this->clearCacheForAllArticles();
+            ArticleMailJob::dispatch($article);
+        }
 
         return redirect('/article');
     }
@@ -63,8 +73,14 @@ class ArticleController extends Controller
         if (isset($_GET['notify'])) {
             auth()->user()->notifications->where('id', $_GET['notify'])->first()->markAsRead();
         }
+
+        $page = '0';
+        if (isset($_GET['page'])) $page = $_GET['page'];
+
+        $comments = Cache::remember('comments/'.$article->id.'/'.$page, 3000, function ()use($article) {
+            return Comment::where('article_id', $article->id)->where('status', 1)->latest()->paginate(2);
+        });
     
-        $comments = Comment::where('article_id', $article->id)->latest()->get();
         return view('article.one_article', ['article' => $article, 'comments' => $comments]);
     }
 
@@ -95,7 +111,13 @@ class ArticleController extends Controller
         $article->short_desc = $request->short_desc;
         $article->desc = $request->desc;
         $article->date = $request->date;
-        $article->save();
+        $res = $article->save();
+
+        if ($res) {
+            $this->clearCacheForArticle($article->id);
+            $this->clearCacheForAllArticles();
+        }
+
         return redirect()->route('article.show', ['article' => $article]);
     }
 
@@ -104,8 +126,43 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        Gate::authorize('delete', [self::class, $article]);
+        Gate::authorize('delete', [self::class]);
+        $comments = Comment::where('article_id', $article->id)->delete();
+        $res = $article->delete();
+
+        if ($res) {
+            $this->clearCacheForArticle($article->id);
+            $this->clearCacheForComments();
+            $this->clearCacheForAllArticles();
+        }
+
         $article->delete();
         return redirect('/article');
+    }
+
+    // Очистка кэша для всех статей
+	public function clearCacheForAllArticles($article_id=null) {
+        $keys = DB::table('cache')->whereRaw('`key` GLOB :key', [':key' => 'articles*[0-9]'])->get();
+            foreach($keys as $key) {
+            Cache::forget($key->key);
+        }
+    }
+
+	// Очистка кэша для одной статьи (в данном случае кэш - комментарии)
+    public function clearCacheForArticle($article_id=null) {
+        if (isset($article_id)) {
+            $keys = DB::table('cache')->whereRaw('`key` GLOB :key', [':key' => 'comments/'.$article_id.'/*[0-9]'])->get();
+            foreach($keys as $key) {
+                Cache::forget($key->key);
+            }    
+        }
+    }
+
+	// Очистка кэша для всех комментариев, которые отображаются на странице модерации комментариев
+    public function clearCacheForComments() {
+        $keys = DB::table('cache')->whereRaw('`key` GLOB :key', [':key' => 'index_comments/*[0-9]'])->get();
+        foreach($keys as $key) {
+            Cache::forget($key->key);
+        }
     }
 }
