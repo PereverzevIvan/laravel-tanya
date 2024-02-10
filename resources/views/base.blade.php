@@ -12,16 +12,16 @@
             Политех
         </a>
         <nav class="header__nav">
-            <a href="/" class="header__link">Главная</a>
-            <a href="/article" class="header__link">Статьи</a>
+            <a href="/" class="header__link @activeLink('/')">Главная</a>
+            <a href="/article" class="header__link @activeLink('article')">Статьи</a>
             @can('create')
-                <a href="/article/create" class="header__link">Создание статьи</a>
+                <a href="/article/create" class="header__link @activeLink('article/create')">Создание статьи</a>
             @endcan
             @can('comment-admin')
-                <a href="/comment/" class="header__link">Все комментарии</a>
+                <a href="/comment" class="header__link @activeLink('comment')">Все комментарии</a>
             @endcan
-            <a href="/contacts" class="header__link">Контакты</a>
-            <a href="/about_us" class="header__link">О нас</a>
+            <a href="/contacts" class="header__link @activeLink('contacts')">Контакты</a>
+            <a href="/about_us" class="header__link @activeLink('about_us')">О нас</a>
         </nav>
         @auth
             <div class="dropdown">
@@ -96,4 +96,8 @@
 
     /* Change the background color of the dropdown button when the dropdown content is shown */
     .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+    .header__link.active {
+        color: red;
+    }
 </style>
