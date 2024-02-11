@@ -26,11 +26,11 @@
         @endcan
     </div>
 </section>
-<section class="comment-section">
+<section class="comment-section island">
     <h2>Комментарии к статье</h2>
     @if (Auth::check() & isset($_GET['res']))
         @if ($_GET['res'] == 1)
-            <div class="alert alert_success">
+            <div class="alert">
                 <p class="alert__text">
                     Ваш комментарий успешно сохранен и отправлен на модерацию.
                 </p>
@@ -40,14 +40,14 @@
     @if (Auth::check())
     <form class="form" action="/comment/store" method="POST">
         @csrf
-        <fieldset>
+        <fieldset class="form__fieldset">
             <legend>Создание комментария</legend>
             
             <label class="form__label" for="title">Заголовок</label>
             <input class="form__input" type="text" name="title" id="title" required>
 
             <label class="form__label" for="text">Текст</label>
-            <textarea name="text" id="text" required></textarea>
+            <textarea class="form__input form__textarea" name="text" id="text" required></textarea>
 
             <input type="hidden" name="article_id" value="{{ $article->id }}">
             <button class="button button_blue" type="submit">Отправить</button>
@@ -61,13 +61,15 @@
                     <p class="comment__title">{{ $comment->title }}</p>
                     <p class="comment__text">{{ $comment->text }}</p>
                     <p class="comment__date">{{ $comment->created_at }}</p>
-                    <p class="comment__author">{{ $comment->getAuthorName() }}</p>
-                    @can('comment', $comment)
-                        <div class="button-box">
-                            <a href="/comment/edit/{{ $comment->id }}" class="button button_blue">Редактировать</a>
-                            <a href="/comment/delete/{{ $comment->id }}" class="button button_red">Удалить</a>
-                        </div>
-                    @endcan
+                    <div class="comment__underline">
+                        <p class="comment__author">{{ $comment->getAuthorName() }}</p>
+                        @can('comment', $comment)
+                            <div class="button-box">
+                                <a href="/comment/edit/{{ $comment->id }}" class="button button_blue">Редактировать</a>
+                                <a href="/comment/delete/{{ $comment->id }}" class="button button_red">Удалить</a>
+                            </div>
+                        @endcan
+                    </div>
                 </div>
             @endif
         @endforeach

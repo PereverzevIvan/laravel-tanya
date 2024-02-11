@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    @vite([ 'resources/js/app.js', 
+            'resources/css/normalize.css', 
+            'resources/css/app.css', 
+            'resources/css/dropdown.css',
+            'resources/css/form.css',
+            'resources/css/tables.css',
+            'resources/css/pagination.css',
+            'resources/css/comment.css'])
 </head>
 <body>
     <header class="header">
-        <a href="/" class="header__logo">
-            Политех
-        </a>
         <nav class="header__nav">
             <a href="/" class="header__link @activeLink('/')">Главная</a>
             <a href="/article" class="header__link @activeLink('article')">Статьи</a>
@@ -20,12 +27,10 @@
             @can('comment-admin')
                 <a href="/comment" class="header__link @activeLink('comment')">Все комментарии</a>
             @endcan
-            <a href="/contacts" class="header__link @activeLink('contacts')">Контакты</a>
-            <a href="/about_us" class="header__link @activeLink('about_us')">О нас</a>
         </nav>
         @auth
             <div class="dropdown">
-                <button class="dropbtn">Новый комментарии ({{ auth()->user()->unreadNotifications->count() }})</button>
+                <button class="dropbtn">Новые комментарии ({{ auth()->user()->unreadNotifications->count() }})</button>
                 <div class="dropdown-content">
                     @foreach (auth()->user()->unreadNotifications as $notify)
                         <a href="{{ route('article.show', ['article' => $notify->data['article']['id'], 'notify' => $notify->id]) }}" class="header__link">
@@ -36,68 +41,24 @@
             </div>
         @endauth
         @if (Auth::user() != null)
-        <a href="/logout" class="header__link">{{ Auth::user()->name }}</a>
+        <a href="/logout" class="button button_red">{{ Auth::user()->name }}</a>
         @else
-            <a href="/register" class="header__link">Регистрация</a>
-            <a href="/login" class="header__link">Вход</a>
+            <div class="button-box">
+                <a href="/register" class="button button_blue">Регистрация</a>
+                <a href="/login" class="button button_green">Вход</a>
+            </div>
         @endif
     </header>
     <div id="app">
 		<App />
 	 </div>   
     <main class="main">
-        @yield('content')
+        <div class="container island">
+            @yield('content')
+        </div>
     </main>
     <footer class="footer">
-        Ашрафулин Рамиль - 221-321
+        <p class="footer__text">Ашрафулин Рамиль - 221-321</p>
     </footer>
 </body>
 </html>
-
-<style>
-    /* Dropdown Button */
-    .dropbtn {
-    background-color: #04AA6D;
-    color: white;
-    padding: 15px, 10px;
-    font-size: 16px;
-    border: none;
-    }
-
-    /* The container <div> - needed to position the dropdown content */
-    .dropdown {
-    position: relative;
-    display: inline-block;
-    }
-
-    /* Dropdown Content (Hidden by Default) */
-    .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    }
-
-    /* Links inside the dropdown */
-    .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    }
-
-    /* Change color of dropdown links on hover */
-    .dropdown-content a:hover {background-color: #ddd;}
-
-    /* Show the dropdown menu on hover */
-    .dropdown:hover .dropdown-content {display: block;}
-
-    /* Change the background color of the dropdown button when the dropdown content is shown */
-    .dropdown:hover .dropbtn {background-color: #3e8e41;}
-
-    .header__link.active {
-        color: red;
-    }
-</style>

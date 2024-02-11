@@ -24,7 +24,7 @@ class CommentController extends Controller
         if (isset($_GET['page'])) $page = $_GET['page'];
 
         $comments = Cache::remember('index_comments/'.$page, 3000, function () {
-            return Comment::latest()->paginate(10);
+            return Comment::latest()->paginate(6);
         });
 
         return view('comment.index', ['comments' => $comments]);
@@ -114,7 +114,9 @@ class CommentController extends Controller
             NewCommentEvent::dispatch($article);
         }
 
-        return redirect()->route('comments');
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+
+        return redirect()->route('comments', ['page' => $page]);
     }
 
     // Метод для отклонения комментария
@@ -130,7 +132,9 @@ class CommentController extends Controller
             $this->clearCacheForArticle($comment->article_id);
         }
 
-        return redirect()->route('comments');
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+
+        return redirect()->route('comments', ['page' => $page]);
     }
     
     public function clearCacheForArticle($article_id=null) {

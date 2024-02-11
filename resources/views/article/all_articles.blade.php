@@ -6,7 +6,7 @@
 
 @section('content')
     <h1>Это страница для просмотра всех статей</h1>
-    <table class="table" style="border: 1px solid black">
+    <table class="table">
         <tr class="table__line">
             <th class="table__header">Name</th>
             <th class="table__header">Short Desc</th>
