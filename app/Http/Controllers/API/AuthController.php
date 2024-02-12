@@ -1,19 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    // Метод для перехода к странице регистрации
-    public function registration() {
-        return view('auth.register');
-    }
-    
     // Метод для создания нового пользователя в БД
     public function create_user(Request $request) {
         $request->validate([
@@ -31,15 +27,11 @@ class AuthController extends Controller
         ]);
 
         // Создание нового токена
-        $user->createToken('myAppToken')->plainTextToken;
-        
-        // Автоматический переход по адресу
-        return redirect()->route('login');
-    }
-
-    // Метод для перехода к странице авторизации
-    public function login() {
-        return view('auth.login');
+        $token = $user->createToken('myAppToken')->plainTextToken;
+        return response()->json([
+            'user' => $user,
+            'token' => $token
+        ]);
     }
 
     public function authenticate(Request $request) {
@@ -51,26 +43,17 @@ class AuthController extends Controller
 
         // Попытка аутентификации
         if (Auth::attempt($credentials)) {
-            // Создание идентификатора сессии и удаление всех данных из нее
-            $request->session()->regenerate();
-
-            // Автоматический переход на главную страцницу
-            return redirect()->intended('/');
+            $token = auth()->user()->createToken('myAppToken');
+            return response($token);
         }
         
         // Если аутентификация не прошла, то возвращаем ошибку на страницу авторизации
-        return back()->withErrors('Неправильный email или пароль');
+        return response(['email' => 'Вы указали неверные данные'], 401);
     }
 
     // Метод выхода пользователя из системы
     public function logOut(Request $request) {
-        Auth::logout();
-        
-        // Немедленное удаление всех данных из текущей сессии
-        $request->session()->invalidate();
-
-        // Генерация нового CSRF-токена
-        $request->session()->regenerateToken();
-        return redirect('/login');
+        auth()->user()->tokens()->delete();
+        return response('logout');
     }
 }

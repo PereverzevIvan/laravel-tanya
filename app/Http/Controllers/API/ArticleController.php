@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Jobs\ArticleMailJob;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class ArticleController extends Controller
 {
@@ -24,17 +25,8 @@ class ArticleController extends Controller
         $articles = Cache::remember('articles'.$page, 3000, function () {
             return Article::latest()->paginate(6);
         });
-        return view('article.all_articles', ['articles' => $articles]);
+        return response()->json(['articles' => $articles]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-	public function create()
-	{
-        Gate::authorize('create', [self::class]);
-		return view('article.create_article');
-	}
 
     /**
      * Store a newly created resource in storage.
@@ -60,9 +52,16 @@ class ArticleController extends Controller
         if ($res) {
             $this->clearCacheForAllArticles();
             ArticleMailJob::dispatch($article);
+            return response()->json([
+                'result' => $res,
+                'article' => $article
+            ]);
         }
 
-        return redirect('/article');
+        return response()->json([
+            'result' => $res,
+            'message' => 'Не удалось сохранить статью'
+        ]);
     }
 
     /**
@@ -81,16 +80,10 @@ class ArticleController extends Controller
             return Comment::where('article_id', $article->id)->where('status', 1)->latest()->paginate(2);
         });
     
-        return view('article.one_article', ['article' => $article, 'comments' => $comments]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Article $article)
-    {
-        Gate::authorize('update', [self::class, $article]);
-        return view('article.edit_article', ['article' => $article]);
+        return response()->json([
+            'article' => $article,
+            'comments' => $comments
+        ]);
     }
 
     /**
@@ -116,9 +109,16 @@ class ArticleController extends Controller
         if ($res) {
             $this->clearCacheForArticle($article->id);
             $this->clearCacheForAllArticles();
+            return response()->json([
+                'result' => $res,
+                'article' => $article
+            ]);
         }
 
-        return redirect()->route('article.show', ['article' => $article]);
+        return response()->json([
+            'result' => $res,
+            'message' => 'Не удалось обновить статью'
+        ]);
     }
 
     /**
@@ -134,9 +134,16 @@ class ArticleController extends Controller
             $this->clearCacheForArticle($article->id);
             $this->clearCacheForComments();
             $this->clearCacheForAllArticles();
+            return response()->json([
+                'result' => $res,
+                'message' => 'Статья успешно удалена'
+            ]);
         }
 
-        return redirect('/article');
+        return response()->json([
+            'result' => $res,
+            'message' => 'Не удалось удалить статью'
+        ]);
     }
 
     // Очистка кэша для всех статей
