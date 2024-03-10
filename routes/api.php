@@ -15,6 +15,7 @@ Route::get('/logout', [AuthController::class, 'logOut'])->middleware('auth:sanct
 
 // Руты для работы со статьями
 Route::resource('/article', ArticleController::class)->middleware('auth:sanctum');
+Route::get('/article', [ArticleController::class, 'index']);
 Route::get('article/{article}', [ArticleController::class, 'show'])->name('article.show')->middleware('path-counter');
 
 // Руты для работы с комментариями к статьям

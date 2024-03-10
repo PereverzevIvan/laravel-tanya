@@ -52,7 +52,7 @@
     </header>
     <div id="app">
 		<App />
-	 </div>   
+	</div>   
     <main class="main">
         <div class="container island">
             @yield('content')

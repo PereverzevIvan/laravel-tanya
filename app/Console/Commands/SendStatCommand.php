@@ -33,6 +33,6 @@ class SendStatCommand extends Command
         $pathCount = Path::all()->count();
         Path::whereNotNull('id')->delete();
         $commentCount = Comment::whereData('created_at', Carbon::today())->count();
-        Mail::to('i.d.pereverzev@mail.ru')->send(new StatMail($pathCount, $commentCount));
+        Mail::to('akopyan.felix02@mail.ru')->send(new StatMail($pathCount, $commentCount));
     }
 }

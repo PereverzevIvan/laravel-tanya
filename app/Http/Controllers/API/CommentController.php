@@ -46,7 +46,7 @@ class CommentController extends Controller
 
         if ($res) {
             $this->clearCacheForComments();
-            Mail::to('i.d.pereverzev@mail.ru')->send(new AdminCommentMail($comment));
+            Mail::to('akopyan.felix02@mail.ru')->send(new AdminCommentMail($comment));
             
             return response()->json([
                 'result' => $res,
@@ -133,7 +133,7 @@ class CommentController extends Controller
             
             return response()->json([
                 'result' => $res,
-                'message' => 'Статья успешно принят'
+                'message' => 'Комментарий успешно принят'
             ]);
         }
 
@@ -157,13 +157,13 @@ class CommentController extends Controller
             
             return response()->json([
                 'result' => $res,
-                'message' => 'Статья успешно отклонена'
+                'message' => 'Комментарий успешно отклонен'
             ]);
         }
 
         return response()->json([
             'result' => $res,
-            'message' => 'Не удалось отклонить статью'
+            'message' => 'Не удалось отклонить комментарий'
         ]);
     }
     
