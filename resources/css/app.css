@@ -11,13 +11,15 @@
     /* colors (cl) */
     --cl-white: white;
     --cl-black: black;
-    --cl-bg-gray: rgb(109, 109, 109);
-    --cl-bg-black-gray: rgb(79, 79, 79);
-    --cl-bg-island: rgb(207, 207, 207);
+    --cl-bg-gray: #9b87ee;
+    --cl-bg-black-gray: #280a41;
+    --cl-bg-island: white;
     --cl-yellow: rgb(255, 247, 0);
     --cl-green:rgb(0, 153, 0);
     --cl-blue:rgb(0, 127, 190);
     --cl-red:rgb(221, 0, 0);
+    --cl-pink: #d200e1;
+    --cl-violet: #6a52ff;
 }
 
 
@@ -46,10 +48,12 @@ h1 {
     font-weight: bold;
     font-size: var(--fz-title-big);
     text-align: center;
+    margin-bottom: 10px;
 }
 h2 {
     font-weight: bold;
     font-size: var(--fz-title-middle);
+    margin-bottom: 10px;
 }
 h3 {
     font-weight: bold;
@@ -86,7 +90,7 @@ h3 {
     text-decoration: none;
 }
 .header__link.active {
-    color: var(--cl-yellow);
+    color: var(--cl-pink);
 }
 
 
@@ -113,6 +117,14 @@ h3 {
     background-color: var(--cl-red);
     color: var(--cl-white)
 }
+.button_pink {
+    background-color: var(--cl-pink);
+    color: var(--cl-white);
+}
+.button_violet {
+    background-color: var(--cl-violet);
+    color: var(--cl-white);
+}
 
 .button-box {
     display: flex;
@@ -131,7 +143,7 @@ h3 {
 .island {
     background-color: var(--cl-bg-island);
     border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -144,6 +156,9 @@ h3 {
     padding: 10px;
     border-radius: 5px;
     margin: 10px;
+}
+.alert-primary {
+    text-align: center;
 }
 
 /* Footer styles */

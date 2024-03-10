@@ -5,8 +5,8 @@
 @endsection
 
 @section('content')
-    <h1>Это страница для просмотра всех комментариев</h1>
-    <table class="table" style="border: 1px solid black">
+    <h1>Модерация комментариев</h1>
+    <table class="table">
         <tr class="table__line">
             <th class="table__header">№</th>
             <th class="table__header">Заголвок</th>
@@ -16,7 +16,7 @@
         </tr>
         @foreach($comments as $comment)
             <tr class="table__line">
-                <td class="table__cell">
+                <td class="table__cell table__cell_centered">
                     {{ $comment->id }}
                 </td>
                 <td class="table__cell">

@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <h1>Добро пожаловать на страницу редактирования статьи</h1>
+    <h1>Редактирование статьи</h1>
     @if ($errors->any())
         <ul class="error-list">
             @foreach ($errors->all() as $error)
@@ -17,7 +17,7 @@
         @method('PUT')
         @csrf
         <fieldset class="form__fieldset">
-            <legend>Создание новой статьи</legend>
+            <legend>Редактирование статьи</legend>
 
             <label class="form__label" for="name">Название статьи</label>
             <input class="form__input" type="text" id="name" name="name" value="{{$article->name}}" required>

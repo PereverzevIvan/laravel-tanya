@@ -5,15 +5,13 @@
 @endsection
 
 @section('content')
-<h1>Это страница статьи № {{ $article->id }}!</h1>
-
 <section class="article-section">
-    <div class="article-card">
-        <h2>{{ $article->name }}</h2>
-        <img src='{{ asset("images/{$article->preview_image}") }}' alt="" height="300px">
-        <p>{{ $article->desc }}</p>
-        <p>{{ $article->date }}</p>
-
+    <h1>{{ $article->name }}</h1>
+    <div class="article-card article-card_without-image">
+        <div class="article-card__info">
+            <p class="article-card__text">{{ $article->desc }}</p>
+            <p class="article-card__date">{{ $article->date }}</p>
+        </div>
         @can('update')
             <div class="button-box">
                 <a href="/article/{{$article->id}}/edit" class="button button_blue">Редактировать</a>
@@ -54,6 +52,7 @@
         </fieldset>
     </form>
     @endif
+    @if (count($comments) != 0)
     <div class="comments-container">
         @foreach ($comments as $comment)
             @if ($comment->status)
@@ -74,6 +73,7 @@
             @endif
         @endforeach
     </div>
+    @endif
     @if ($comments->hasPages())
         <div class="paginator">
             @if ($comments->currentPage() != 1)

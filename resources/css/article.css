@@ -1,0 +1,30 @@
+.article-card {
+    border: 1px solid black;
+    margin: 30px auto 0 auto;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    gap: 20px;
+}
+.article-card_without-image {
+    max-width: 700px;
+    flex-direction: column;
+    align-items: center;
+}
+.article-card__info {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.article-card__text {
+    line-height: 22px;
+}
+.article-card__image {
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.article-card__date {
+    font-weight: bold;
+    align-self: flex-end;
+}

@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-    <h1>Добро пожаловать на страницу авторизации!</h1>
     @if ($errors->any())
         <ul class="error-list">
             @foreach ($errors->all() as $error)

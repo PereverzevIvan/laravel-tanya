@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <h1>Добро пожаловать на страницу редактирования комментария к статье</h1>
+    <h1>Редактирование комментария</h1>
     @if ($errors->any())
         <ul class="error-list">
             @foreach ($errors->all() as $error)

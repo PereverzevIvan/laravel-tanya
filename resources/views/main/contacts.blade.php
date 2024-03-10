@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<h1>Это страница для просмотра контактов!</h1>
+<h1>Контакты</h1>
 <p>Список контактов:</p>
 <ul>
     @foreach($data as $contact)

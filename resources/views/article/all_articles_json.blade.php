@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<h1>Это страница для просмотра всех статей!</h1>
+<h1>Статьи из файла</h1>
 <table class="table">
     <tr class="table__line">
         <th class="table__header">Name</th>
@@ -21,8 +21,8 @@
             @else
             <td class="table__cell">Нет данных</td>
             @endif
-            <td class="table__cell"><a href="/one_article/?id={{ $article->id }}"><img src='{{ asset("images/{$article->preview_image}") }}' alt="" height="100px"></a></td>
-            <td class="table__cell">{{ $article->date }}</td>
+            <td class="table__cell table__cell_centered"><a href="/one_article/?id={{ $article->id }}"><img src='{{ asset("images/{$article->preview_image}") }}' alt="" height="100px"></a></td>
+            <td class="table__cell table__cell_centered">{{ $article->date }}</td>
         </tr>
     @endforeach
 </table>

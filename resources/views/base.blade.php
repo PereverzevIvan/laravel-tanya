@@ -14,7 +14,8 @@
             'resources/css/form.css',
             'resources/css/tables.css',
             'resources/css/pagination.css',
-            'resources/css/comment.css'])
+            'resources/css/comment.css',
+            'resources/css/article.css'])
 </head>
 <body>
     <header class="header">
@@ -41,11 +42,11 @@
             </div>
         @endauth
         @if (Auth::user() != null)
-        <a href="/logout" class="button button_red">{{ Auth::user()->name }}</a>
+        <a href="/logout" class="button button_violet">{{ Auth::user()->name }}</a>
         @else
             <div class="button-box">
-                <a href="/register" class="button button_blue">Регистрация</a>
-                <a href="/login" class="button button_green">Вход</a>
+                <a href="/register" class="button button_pink">Регистрация</a>
+                <a href="/login" class="button button_violet">Вход</a>
             </div>
         @endif
     </header>
@@ -58,7 +59,7 @@
         </div>
     </main>
     <footer class="footer">
-        <p class="footer__text">Ашрафулин Рамиль - 221-321</p>
+        <p class="footer__text">Акопян Феликс Саакович - 221-322</p>
     </footer>
 </body>
 </html>

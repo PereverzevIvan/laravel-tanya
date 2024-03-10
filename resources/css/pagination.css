@@ -8,3 +8,6 @@
     display: flex;
     gap: 10px;
 }
+.paginator__button {
+    border: 1px solid black;
+}
