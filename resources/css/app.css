@@ -11,15 +11,15 @@
     /* colors (cl) */
     --cl-white: white;
     --cl-black: black;
-    --cl-bg-gray: #9b87ee;
-    --cl-bg-black-gray: #280a41;
+    --cl-bg-gray: #ffb3c1;
+    --cl-bg-black-gray: #590d22;
     --cl-bg-island: white;
     --cl-yellow: rgb(255, 247, 0);
     --cl-green:rgb(0, 153, 0);
     --cl-blue:rgb(0, 127, 190);
     --cl-red:rgb(221, 0, 0);
-    --cl-pink: #d200e1;
-    --cl-violet: #6a52ff;
+    --cl-pink: #fff0f3;
+    --cl-violet: #800f2f;
 }
 
 
@@ -119,7 +119,7 @@ h3 {
 }
 .button_pink {
     background-color: var(--cl-pink);
-    color: var(--cl-white);
+    color: var(--cl-black);
 }
 .button_violet {
     background-color: var(--cl-violet);

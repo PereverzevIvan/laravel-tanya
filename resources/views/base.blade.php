@@ -59,7 +59,7 @@
         </div>
     </main>
     <footer class="footer">
-        <p class="footer__text">Акопян Феликс Саакович - 221-322</p>
+        <p class="footer__text">Кретинина Татьяна Сергеевна - 221-322</p>
     </footer>
 </body>
 </html>
