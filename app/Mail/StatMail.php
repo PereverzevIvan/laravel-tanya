@@ -34,7 +34,7 @@ class StatMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('akopyan.felix02@mail.ru'),
+            from: new Address('kretinina1202@mail.ru'),
             subject: 'Statistic Mail',
         );
     }
